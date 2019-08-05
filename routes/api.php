@@ -22,7 +22,7 @@ Route::post('event/tambah','EventController@createEvent');
 Route::post('ticket/join','TicketController@create');
 Route::get('login','API\UserController@login');
 Route::post('register','API\UserController@register');
-Route::get('ticket/{id}','TicketController@index');
+Route::get('ticket/{idevent}','TicketController@index');
 Route::get('event/{id}','EventController@index1');
 
 Route::group(['middleware' => 'auth:api'], function(){
