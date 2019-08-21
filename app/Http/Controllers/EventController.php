@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Event;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use DB;
 
 class EventController extends Controller
@@ -25,19 +26,25 @@ class EventController extends Controller
         
 
             public function createEvent(request $request){
-                
-                $event = new Event;
-                $event->namaEvent = $request->namaEvent;
-                $event->tanggalEvent = $request->tanggalEvent;
-                $event->jamEvent = $request->jamEvent;
-                $event->jumlahPesertaEvent = $request->jumlahPesertaEvent;
-                $event->lokasiEvent = $request->lokasiEvent;
-                $event->brosurEvent = $request->brosurEvent;
-                $event->deskripsiEvent = $request->deskripsiEvent;
-                $event->qrEvent = $request->qrEvent;
-                $event->save();
 
+                $input = $request->all();
+                
+                if($request->brosurEvent->storeAs('brosur', $input['brosurEvent']->getClientOriginalName(), 'upload')){
+                    $event = new Event;
+                    $event -> namaEvent = $input['namaEvent'];
+                    $event -> tanggalEvent = $input['tanggalEvent'];
+                    $event -> jamEvent = $input['jamEvent'];
+                    $event -> jumlahPesertaEvent = $input['jumlahPesertaEvent'];
+                    $event -> lokasiEvent = $input['lokasiEvent'];
+                    $event -> brosurEvent = $input['brosurEvent']->getClientOriginalName();
+                    $event -> deskripsiEvent = $input['deskripsiEvent'];
+                    //$event -> qrEvent = NULL;
+                    $event -> save();
+                }
+                
                 return response()->json($event);
+
+            
         
             }
         
