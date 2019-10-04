@@ -21,7 +21,7 @@ class TicketController extends Controller
         }
 
         return response()->json($tickets);
-        }
+    }
 
     public function create(request $request){
 

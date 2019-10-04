@@ -20,7 +20,7 @@ public $successStatus = 200;
             $success['name'] =  $user->name;
             $success['email'] =  $user->email;
             $success['id'] =  $user->id; 
-            return response()->json(['success' => $success], $this-> successStatus); 
+            return response()->json($success); 
         } 
         else{ 
             return response()->json(['error'=>'Unauthorised'], 401); 
@@ -37,7 +37,7 @@ public $successStatus = 200;
             'name' => 'required', 
             'email' => 'required|email', 
             'password' => 'required', 
-            'c_password' => 'required|same:password', 
+            'cpassword' => 'required|same:password', 
         ]);
 if ($validator->fails()) { 
             return response()->json(['error'=>$validator->errors()], 401);            
@@ -47,6 +47,7 @@ $input = $request->all();
         $user = User::create($input); 
         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
         $success['name'] =  $user->name;
+        $success['id'] = $user->id;
 return response()->json(['success'=>$success], $this-> successStatus); 
     }
 /** 

@@ -24,6 +24,7 @@ Route::post('ticket/join','TicketController@create');
 Route::post('register','API\UserController@register');
 Route::get('ticket/{idevent}','TicketController@index');
 Route::get('event/{id}','EventController@index1');
+Route::get('event/user/{uid}','EventController@index2');
 Route::get('login/{email}/{password}','API\UserController@login');
 
 
