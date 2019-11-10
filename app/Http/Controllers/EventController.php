@@ -11,9 +11,6 @@ use DB;
 
 class EventController extends Controller
 {
-
-    
-    
      public function index(){
         $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
         $events  = DB::table('events')->get();
@@ -61,7 +58,8 @@ class EventController extends Controller
 
 
         $input = $request->all();
-                
+              
+        
         if($request->brosurEvent->storeAs('brosur', $input['brosurEvent']->getClientOriginalName(), 'upload')){
             $event = new Event;
             $event -> uid = $input['uid'];

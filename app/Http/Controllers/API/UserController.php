@@ -13,6 +13,8 @@ public $successStatus = 200;
      * 
      * @return \Illuminate\Http\Response 
      */ 
+
+     
     public function login(){ 
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
             $user = Auth::user(); 
@@ -42,13 +44,14 @@ public $successStatus = 200;
 if ($validator->fails()) { 
             return response()->json(['error'=>$validator->errors()], 401);            
         }
-$input = $request->all(); 
+        $input = $request->all(); 
         $input['password'] = bcrypt($input['password']); 
         $user = User::create($input); 
         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
         $success['name'] =  $user->name;
         $success['id'] = $user->id;
-return response()->json(['success'=>$success], $this-> successStatus); 
+        
+        return response()->json(['success'=>$success], $this-> successStatus); 
     }
 /** 
      * details api 

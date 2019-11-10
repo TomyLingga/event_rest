@@ -18,6 +18,7 @@ class CreateTicketTable extends Migration
             $table->integer('eid');   //id event yg diikuti
             $table->integer('uid');  //id peserta yg mengikuti event
             $table->string('qrCode');
+            $table->boolean('kehadiran')->nullable()->default(false);
             $table->timestamps();
         });
     }
