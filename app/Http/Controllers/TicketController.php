@@ -34,10 +34,9 @@ class TicketController extends Controller
         return response()->json($tickets);
     }
 
-    public function scan($uid, $qrCode){
+    public function scan($qrCode){
 
-        $haha = urlencode($qrCode);
-        $tickets = DB::table('tickets')->where(['qrCode'=>$haha, 'uid'=>$uid])
+        $tickets = DB::table('tickets')->where(['qrCode'=>$qrCode])
                    ->update(['kehadiran' => true]);
 
         $response["peserta"] = $tickets;
