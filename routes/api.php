@@ -23,7 +23,7 @@ Route::post('ticket/join','TicketController@create');
 //Route::get('login','API\UserController@login');
 Route::post('register','API\UserController@register');
 Route::get('event/mengikuti/{userId}','EventController@eventByUidMengikuti');
-Route::get('search','SearchController@search');
+Route::get('search/{cari}','SearchController@search');
 Route::get('ticket/{idevent}','TicketController@index');
 Route::get('ticket/scan/{qrCode}','TicketController@scan');
 Route::get('ticket/{eid}/{uidMengikuti}','TicketController@indexById');
