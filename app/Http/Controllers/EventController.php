@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Event;
+use App\Ticket;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Query\Builder;
@@ -11,9 +12,10 @@ use DB;
 
 class EventController extends Controller
 {
-     public function index(){
+    public $successStatus = 200;
+    public function index(){
         $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
-        $events  = DB::table('events')->get();
+        $events  = DB::table('events')->latest()->get();
 
         foreach ($events as $event) {
             $event->brosurEvent = $image_path.$event->brosurEvent;    
@@ -22,9 +24,9 @@ class EventController extends Controller
         $response["events"] = $events;
         $response["success"] = 1;
         return response()->json($response);
-     }
+    }
     
-    public function index1($id){
+    public function index1($id, $userId){
         $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
 
         $event  = DB::table('events')->find($id);
@@ -32,10 +34,46 @@ class EventController extends Controller
         if($event->brosurEvent != null){
             $event->brosurEvent = $image_path.$event->brosurEvent;            
         }
-        
-        //$response["event"] = ;
-           //$response["success"] = 1;
-           return response()->json($event);
+
+        $jlh_peserta =  DB::table('tickets')->where(['eid'=>$id])
+            ->count();
+      
+        if(Ticket::where([
+                    'uidMengikuti'=> $userId,
+                    'eid'=>$id,
+                ])->exists()){
+                    $success['jumlahPeserta'] = $jlh_peserta;
+                    $success['statusAda'] = true;
+                    $success['id'] = $event->id;
+                    $success['uid'] = $event->uid;
+                    $success['namaEvent'] = $event->namaEvent;
+                    $success['tanggalEvent'] = $event->tanggalEvent;
+                    $success['jamEvent'] = $event->jamEvent;
+                    $success['jumlahPesertaEvent'] = $event->jumlahPesertaEvent;
+                    $success['lokasiEvent'] = $event->lokasiEvent;
+                    $success['brosurEvent'] = $event->brosurEvent;
+                    $success['deskripsiEvent'] = $event->deskripsiEvent;
+                    $success['qrEvent'] = $event->qrEvent;
+                    $success['created_at'] = $event->created_at;
+                    $success['updated_at'] = $event->updated_at;
+                } else {
+                    $success['jumlahPeserta'] = $jlh_peserta;
+                    $success['statusAda'] = false;
+                    $success['id'] = $event->id;
+                    $success['uid'] = $event->uid;
+                    $success['namaEvent'] = $event->namaEvent;
+                    $success['tanggalEvent'] = $event->tanggalEvent;
+                    $success['jamEvent'] = $event->jamEvent;
+                    $success['jumlahPesertaEvent'] = $event->jumlahPesertaEvent;
+                    $success['lokasiEvent'] = $event->lokasiEvent;
+                    $success['brosurEvent'] = $event->brosurEvent;
+                    $success['deskripsiEvent'] = $event->deskripsiEvent;
+                    $success['qrEvent'] = $event->qrEvent;
+                    $success['created_at'] = $event->created_at;
+                    $success['updated_at'] = $event->updated_at;
+                }
+
+        return response()->json($success);
     }
 
     public function index2($uid){
@@ -50,6 +88,25 @@ class EventController extends Controller
 
         $response["events"] = $events;
         $response["success"] = 1;
+        return response()->json($response);
+    }
+
+    public function eventByUidMengikuti($userId){
+
+        $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
+
+        $tickets = DB::table('tickets')->where(['uidMengikuti'=>$userId])
+        ->join('events','tickets.eid','=','events.id')
+        ->select('events.*')
+        ->get();
+
+        foreach ($tickets as $event) {
+            if($event->brosurEvent != null){
+                $event->brosurEvent = $image_path.$event->brosurEvent;            
+            }   
+        }
+
+        $response["events"] = $tickets;
         return response()->json($response);
     }
         

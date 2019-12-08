@@ -16,7 +16,7 @@ class CreateTicketTable extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('eid');   //id event yg diikuti
-            $table->integer('uid');  //id peserta yg mengikuti event
+            $table->integer('uidMengikuti');  //id peserta yg mengikuti event
             $table->string('qrCode');
             $table->boolean('kehadiran')->nullable()->default(false);
             $table->timestamps();
