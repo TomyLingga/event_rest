@@ -8,18 +8,20 @@ use DB;
 class SearchController extends Controller
 {
     public function search(request $string){
-        //$cari = Event::search($string)->get();
-
+        
+        $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
         $cari = $string->cari;
         
-        if($cari==null){
-            $events = "hahahahha";
+        $events = DB::table('events')
+            ->where('namaEvent','like',"%".$cari."%")->get();
         
-        }else{
-    		// mengambil data dari table pegawai sesuai pencarian data
-		$events = DB::table('events')
-		->where('namaEvent','like',"%".$cari."%")->get();
-    }
-        return response()->json($events);
+            foreach ($events as $event) {
+                $event->brosurEvent = $image_path.$event->brosurEvent;    
+            }
+        
+        $response["events"] = $events;
+        $response["success"] = 1;
+    
+        return response()->json($response);
     }
 }

@@ -14,11 +14,14 @@ class EventController extends Controller
 {
     public $successStatus = 200;
     public function index(){
+        //$date_string = "06 December 2019";
         $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
-        $events  = DB::table('events')->latest()->get();
-
-        foreach ($events as $event) {
-            $event->brosurEvent = $image_path.$event->brosurEvent;    
+        $events  = DB::table('events')
+                        ->latest()
+                        ->get();
+ 
+        foreach ($events as $key => $event) {
+            $event->brosurEvent = $image_path.$event->brosurEvent;     
         }
 
         $response["events"] = $events;
@@ -141,3 +144,32 @@ class EventController extends Controller
     }
 
 }
+
+
+
+// public function index(){
+//     //$date_string = "06 December 2019";
+//     $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
+//     $events  = DB::table('events')
+//             // ->where(strtotime($events->tanggalEvent) < time() - (72*60*60))
+//             ->latest()
+//             ->get();
+//     // if (strtotime($date_string) <= time()- (72*60*60)){
+//     //     $response["success"] = "dah lewat";
+//     // }else{
+//     //     $response["success"] = "belum lewat";
+//     // }
+    
+//     foreach ($events as $key => $event) {
+//     //     if (strtotime($event->tanggalEvent) < time() - (72*60*60)){
+//     //         unset ($events[$key]);
+//     //         // dd(time().time() - (72*60*60));
+//     //     }else{
+//             $event->brosurEvent = $image_path.$event->brosurEvent;
+//         // }       
+//     }
+
+//     $response["events"] = $events;
+//     $response["success"] = 1;
+//     return response()->json($response);
+// }
