@@ -17,7 +17,7 @@ class CreateEventTable extends Migration
             $table->increments('id');
             $table->integer('uid');     //author yg buat event
             $table->string('namaEvent');
-            $table->string('tanggalEvent');
+            $table->date('tanggalEvent');
             $table->time('jamEvent');
             $table->integer('jumlahPesertaEvent');
             $table->string('lokasiEvent');

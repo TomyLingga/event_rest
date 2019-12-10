@@ -17,6 +17,7 @@ class EventController extends Controller
         //$date_string = "06 December 2019";
         $image_path = "http://192.168.43.248/event_rest/storage/app/public/upload/brosur/";
         $events  = DB::table('events')
+                        ->whereDate('tanggalEvent', '>=', date('Y-m-d'))
                         ->latest()
                         ->get();
  
