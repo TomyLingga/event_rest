@@ -10,6 +10,6 @@ class Ticket extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User', 'uid');
+        return $this->belongsTo('App\User', 'uid');     //1 user memiliki 1 tiket
     }
 }

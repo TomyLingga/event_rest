@@ -10,60 +10,74 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use DB;
 
-
-
 class TicketController extends Controller
-{
-    public function index($idevent){
+ {
 
-        $tickets = DB::table('tickets')->where(['eid'=>$idevent])
-        ->join('users','tickets.uidMengikuti','=','users.id')
+    //fungsi untuk mengambil list2 user yang join suatu event dengan parameter idevent
+
+    public function index( $idevent ) {
+
+        $tickets = DB::table( 'tickets' )->where( ['eid'=>$idevent] )
+        ->join( 'users', 'tickets.uidMengikuti', '=', 'users.id' )       //ambil data semua user yang sudah join event yang idnya = parameter
         ->get();
 
-        $response["peserta"] = $tickets;
-        return response()->json($response);
+        $response['peserta'] = $tickets;
+        return response()->json( $response );
     }
 
-    public function indexById($eid, $uidMengikuti){
+    //fungsi untuk mengambil tiket seorang user dari suatu event dengan parameter id event dan id user yang mengikuti
 
-        $tickets = DB::table('tickets')->where([
+    public function indexById( $eid, $uidMengikuti ) {
+
+        $tickets = DB::table( 'tickets' )->where( [
             'eid'=>$eid,
             'uidMengikuti'=>$uidMengikuti
-        ])->first();
+        ] )->first();
 
-        return response()->json($tickets);
+        return response()->json( $tickets );
     }
 
-    public function scan($qrCode){
+    //fungsi untuk scan
 
-        $tickets = DB::table('tickets')->where(['qrCode'=>$qrCode])
-                   ->update(['kehadiran' => true]);
+    public function scan( $qrCode ) {
 
-        $response["peserta"] = $tickets;
-        return response()->json($response);
+        $tickets = DB::table( 'tickets' )->where( ['qrCode'=>$qrCode] )
+        ->update( ['kehadiran' => true] );
+        //jika data qrCode pada tabel tickets = parameter, set kehadiran jadi true
+
+        $response['peserta'] = $tickets;
+        return response()->json( $response );
     }
 
-    public function create(request $request){
+    //fungsi untuk buat tiket ( ketika user nge join suatu event )
+
+    public function create( request $request ) {
         $time = Carbon::now();
+        // ambil waktu sekarang tampung ke time
         $ticket = new Ticket;
-        if(isset($request->eid) && isset($request->uidMengikuti)){
-            if(Ticket::where([
-                            'uidMengikuti'=>$request->uidMengikuti,
-                            'eid'=>$request->eid,
-                        ])->exists()){
-                            return "data ADA";
-            }else{
+        if ( isset( $request->eid ) && isset( $request->uidMengikuti ) ) {
+            if ( Ticket::where( [
+                'uidMengikuti'=>$request->uidMengikuti,
+                'eid'=>$request->eid,
+            ] )->exists() ) {
+                // kalau user sudah pernah join event ini sebelumnya, maka cuma return data yang sudah ada saja
+                return 'data ADA';
+                // dan tidak ditambah data baru ke database
+            } else {
                 $ticket->eid = $request->eid;
-                        $ticket->uidMengikuti = $request->uidMengikuti;
-                        $qrString = $ticket->eid.$ticket->uidMengikuti.$time;
-                        $hashed = md5($qrString);
-                        $ticket->qrCode = $hashed;
-                        $ticket->save();
-                            return $qrString."  sukses";
+                $ticket->uidMengikuti = $request->uidMengikuti;
+                $qrString = $ticket->eid.$ticket->uidMengikuti.$time;
+                // data qr berupa eventid ditambah user id yang mengikuti event tsb ditambah waktu sekarang
+                $hashed = md5( $qrString );
+                // kemudian di hash
+                $ticket->qrCode = $hashed;
+                $ticket->save();
+                return $qrString.'  sukses';
             }
-                
-        }else{
-            return "gagal";
-        }       
+
+        } else {
+            return 'gagal';
+        }
+
     }
 }
