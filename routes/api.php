@@ -30,7 +30,6 @@ Route::get('event/user/{uid}','EventController@index2');                        
 Route::get('event/{id}/{uid}','EventController@index1');                        // url untuk Detail Event
 Route::get('login/{email}/{password}','API\UserController@login');              // url untuk login
 
-
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'API\UserController@details');
     });
