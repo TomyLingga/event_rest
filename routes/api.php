@@ -25,8 +25,9 @@ Route::get('event/mengikuti/{userId}','EventController@eventByUidMengikuti');   
 Route::get('search/{cari}','SearchController@search');                          // url untuk search
 Route::get('ticket/{idevent}','TicketController@index');                        // url untuk list2 user yang join suatu event
 Route::get('ticket/scan/{qrCode}','TicketController@scan');                     // url untuk scan
-Route::get('ticket/{eid}/{uidMengikuti}','TicketController@indexById');         // url untuk mengambil tiket seorang user dari suatu event
 Route::get('event/user/{uid}','EventController@index2');                        // url untuk me List My Event
+Route::get('ticket/cetak_pdf/{idevent}', 'TicketController@cetak_pdf');
+Route::get('ticket/{eid}/{uidMengikuti}','TicketController@indexById');         // url untuk mengambil tiket seorang user dari suatu event
 Route::get('event/{id}/{uid}','EventController@index1');                        // url untuk Detail Event
 Route::get('login/{email}/{password}','API\UserController@login');              // url untuk login
 

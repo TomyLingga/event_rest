@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use DB;
+use PDF;
 
 class TicketController extends Controller
  {
@@ -23,6 +24,19 @@ class TicketController extends Controller
 
         $response['peserta'] = $tickets;
         return response()->json( $response );
+    }
+
+    public function cetak_pdf( $idevent ) {
+
+        $tickets = DB::table( 'tickets' )->where( ['eid'=>$idevent] )
+        ->join( 'users', 'tickets.uidMengikuti', '=', 'users.id' )       //ambil data semua user yang sudah join event yang idnya = parameter
+        ->get();
+
+        $pdf = PDF::loadview('peserta_pdf',['tickets'=>$tickets]);
+        
+    	return $pdf->download('list-peserta'.date('Y-m-d_H-i-s').'.pdf');
+        // $response['peserta'] = $tickets;
+        // return response()->json( $response );
     }
 
     //fungsi untuk mengambil tiket seorang user dari suatu event dengan parameter id event dan id user yang mengikuti
